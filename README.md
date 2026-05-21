@@ -5,8 +5,8 @@ TaskFlow is a simple team project management web application built for our final
 ## Team Members
 | Name   | Role |
 |--------|------|
-| Samira | Frontend Developer (Handlebars templates, Tailwind CSS) |
-| Niyat  | Backend Developer (Express.js, MongoDB, JWT Auth) |
+| Samira Junaid | Frontend Developer (Handlebars templates, Tailwind CSS) |
+| Niyat Tadesse | Backend Developer (Express.js, MongoDB, JWT Auth) |
 
 ## Tech Stack
 | Layer      | Technology              |
