@@ -1,0 +1,57 @@
+<!-- views/signup.hbs -->
+<div class='bg-purple-50 min-h-screen flex items-center justify-center px-4'>
+  <div class='bg-white p-8 rounded-2xl shadow-lg w-full max-w-md'>
+    <h1 class='text-2xl font-bold text-purple-800 mb-6 text-center'>Create Account</h1>
+
+    {{#if error}}
+      <div class='bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3
+                  rounded-lg mb-4 text-center'>
+        {{error}}
+      </div>
+    {{/if}}
+
+    <form action='/api/auth/signup' method='POST' class='space-y-4'>
+
+      <div>
+        <label class='block text-sm font-medium text-gray-700 mb-1'>Full Name</label>
+        <input type='text' name='name' placeholder='Your full name' required
+          class='w-full border border-gray-300 rounded-lg px-4 py-2
+                 focus:outline-none focus:ring-2 focus:ring-purple-500' />
+      </div>
+      <div>
+        <label class='block text-sm font-medium text-gray-700 mb-1'>Password</label>
+        <input type='password' name='password' placeholder='Min 6 characters' required
+          class='w-full border border-gray-300 rounded-lg px-4 py-2
+                 focus:outline-none focus:ring-2 focus:ring-purple-500' />
+      </div>
+      <div>
+        <label class='block text-sm font-medium text-gray-700 mb-1'>Email</label>
+        <input type='email' name='email' placeholder='you@example.com' required
+          class='w-full border border-gray-300 rounded-lg px-4 py-2
+                 focus:outline-none focus:ring-2 focus:ring-purple-500' />
+       </div>
+
+      <div>
+        <label class='block text-sm font-medium text-gray-700 mb-1'>I am a...</label>
+        <select name='role'
+          class='w-full border border-gray-300 rounded-lg px-4 py-2
+                 focus:outline-none focus:ring-2 focus:ring-purple-500'>
+          <option value='employee'>Employee</option>
+          <option value='manager'>Manager</option>
+        </select>
+        <!-- value='employee' is what gets sent to req.body.role, not the display text -->
+      </div>
+
+      <button type='submit'
+        class='w-full bg-purple-700 text-white py-2 rounded-lg font-semibold
+               hover:bg-purple-800 transition-colors'>
+        Create Account
+      </button>
+    </form>
+
+    <p class='mt-4 text-center text-sm text-gray-500'>
+      Already have an account?
+      <a href='/login' class='text-purple-700 font-medium hover:underline'>Log in</a>
+    </p>
+  </div>
+</div>

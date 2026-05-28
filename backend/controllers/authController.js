@@ -53,12 +53,11 @@ exports.login =  async (req,res) => {
         );
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: false,
             sameSite: 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        res.redirect('/login?message=Login+successful');
         
         res.redirect(user.role === 'manager' ? '/manager' : '/employee');
     } catch(err){

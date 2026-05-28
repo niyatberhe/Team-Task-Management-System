@@ -1,0 +1,106 @@
+<!-- views/manager.hbs -->
+{{> navbar}}
+<!-- One line. Niyat's partial system inserts the full navbar here. -->
+<!-- {{userName}} inside navbar.hbs gets the value from this page's context. -->
+
+<div class='max-w-5xl mx-auto px-6 py-8'>
+
+  <!-- Show error if a task action failed -->
+  {{#if error}}
+    <div class='bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6'>
+      {{error}}
+    </div>
+  {{/if}}
+
+  <!-- CREATE TASK FORM -->
+  <div class='bg-white rounded-2xl shadow p-6 mb-8'>
+    <h2 class='text-lg font-bold text-purple-800 mb-4'>Create New Task</h2>
+
+    <!-- This form posts to Niyat's POST /api/tasks route -->
+    <!-- After saving, her taskController redirects back to /manager -->
+    <form action='/api/tasks' method='POST' class='grid grid-cols-1 gap-4 md:grid-cols-2'>
+
+      <input type='text' name='title' placeholder='Task title' required
+        class='border border-gray-300 rounded-lg px-4 py-2
+               focus:outline-none focus:ring-2 focus:ring-purple-500' />
+
+      <!-- Employee dropdown: Niyat passed the employees array via res.render() -->
+      <!-- value='{{this._id}}' sends the MongoDB ID to req.body.assignedTo -->
+      <select name='assignedTo'
+        class='border border-gray-300 rounded-lg px-4 py-2
+               focus:outline-none focus:ring-2 focus:ring-purple-500'>
+        <option value=''>Assign to employee...</option>
+        {{#each employees}}
+          <option value='{{this._id}}'>{{this.name}}</option>
+        {{/each}}
+      </select>
+
+      <input type='text' name='description' placeholder='Description (optional)'
+        class='border border-gray-300 rounded-lg px-4 py-2
+               focus:outline-none focus:ring-2 focus:ring-purple-500 md:col-span-2' />
+      <!-- md:col-span-2 makes this span both grid columns on medium screens -->
+
+      <input type='date' name='deadline'
+        class='border border-gray-300 rounded-lg px-4 py-2
+               focus:outline-none focus:ring-2 focus:ring-purple-500' />
+
+      <button type='submit'
+        class='bg-purple-700 text-white rounded-lg px-4 py-2 font-semibold
+               hover:bg-purple-800 transition-colors'>
+        Create Task
+      </button>
+    </form>
+  </div>
+
+  <!-- TASK LIST -->
+  <h2 class='text-lg font-bold text-gray-700 mb-4'>All Tasks</h2>
+
+  {{#if tasks}}
+    <div class='space-y-4'>
+      {{#each tasks}}
+        <div class='bg-white rounded-xl shadow p-5 flex justify-between items-start gap-4'>
+
+          <!-- Task details on the left -->
+          <div class='flex-1 min-w-0'>
+            <h3 class='font-semibold text-gray-800'>{{this.title}}</h3>
+            {{#if this.description}}
+              <p class='text-sm text-gray-500 mt-1'>{{this.description}}</p>
+            {{/if}}
+            <p class='text-sm text-gray-400 mt-1'>
+              Assigned to:
+              <span class='font-medium text-gray-600'>{{this.assignedTo.name}}</span>
+            </p>
+               {{#if this.deadline}}
+              <p class='text-sm text-gray-400'>Deadline: {{this.deadline}}</p>
+            {{/if}}
+          </div>
+
+          <!-- Status badge + delete on the right -->
+          <div class='flex flex-col items-end gap-2 shrink-0'>
+            <!-- statusClass is Niyat's helper - returns Tailwind colour classes -->
+            <span class='text-xs px-3 py-1 rounded-full font-medium {{statusClass this.status}}'>
+              {{this.status}}
+            </span>
+
+            <!-- Delete form: action fakes a DELETE request using ?_method=DELETE -->
+            <!-- this._id is the task's MongoDB ID, available inside the current task loop -->
+            <form action='/api/tasks/{{this._id}}?_method=DELETE' method='POST'>
+              <button type='submit'
+                class='text-red-500 text-xs hover:text-red-700 hover:underline'>
+                Delete
+              </button>
+            </form>
+          </div>
+
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class='text-center py-16 text-gray-400'>
+      <p class='text-4xl mb-3'>📋</p>
+      <p class='font-medium'>No tasks yet.</p>
+      <p class='text-sm mt-1'>Create one using the form above.</p>
+    </div>
+  {{/if}}
+
+</div>

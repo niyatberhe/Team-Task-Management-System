@@ -1,14 +1,12 @@
-const checkRole = (...allowedRoles) => {
+const checkRole = (requiredRole) => {
     return (req, res, next) => {
-        if (!req.user) {
-            return res.status(401).json({ message: 'Unauthorized' });
+        // Safe check using lowercase conversion
+        if (req.user && req.user.role && req.user.role.toLowerCase() === requiredRole.toLowerCase()) {
+            return next();
         }
         
-        if (!allowedRoles.includes(req.user.role)) {
-            return res.status(403).json({message: `Access denied. Only ${allowedRoles.join(', ')} can do this.`});
-        }
-
-        next();
+        // If they don't have the right role, send them away with a clear error
+        return res.redirect('/login?error=You+do+not+have+permission+to+view+that+page');
     };
 };
 
