@@ -49,16 +49,7 @@ app.use((req, res, next) => {
 app.use(methodOverride('_method'));
 app.use(express.static(__dirname + '/public'));
 
-app.use('/', require('./routes/views'));
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/tasks',require('./routes/tasks'));
-
-app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the Task Management API' });
-});
-
-const PORT = process.env.PORT || 5000;
-
+// Ensure DB is connected before handling any routes (important for serverless/Vercel)
 let cached = global.mongoose;
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
@@ -83,10 +74,21 @@ app.use(async (req, res, next) => {
   }
 });
 
+app.use('/', require('./routes/views'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/tasks',require('./routes/tasks'));
+
+app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to the Task Management API' });
+});
+
+const PORT = process.env.PORT || 5000;
+
 if (require.main === module) {
-  const PORT = process.env.PORT || 5000;
   connectDB().then(() => {
     app.listen(PORT, () => console.log(`Server on port ${PORT}`));
+  }).catch(err => {
+    console.error('Failed to connect DB on startup:', err);
   });
 }
 
