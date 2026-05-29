@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
+const jwt = require('jsonwebtoken');
 const {engine} = require('express-handlebars');
 
 const app = express();
@@ -27,6 +28,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
+
+// Expose decoded JWT payload (if present) to all templates as `user`
+app.use((req, res, next) => {
+  const token = req.cookies && req.cookies.token;
+  if (!token) {
+    res.locals.user = null;
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.locals.user = decoded;
+  } catch (err) {
+    res.locals.user = null;
+  }
+
+  next();
+});
 app.use(methodOverride('_method'));
 app.use(express.static(__dirname + '/public'));
 

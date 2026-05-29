@@ -6,17 +6,13 @@
     </h1>
 
     <div class="space-x-4">
-
-      <a href="/login"
-        class="hover:text-gray-200 transition">
-        Login
-      </a>
-
-      <a href="/signup"
-        class="hover:text-gray-200 transition">
-        Signup
-      </a>
-
+      {{#if user}}
+        <span class="hidden sm:inline-block text-sm">Hello, {{user.name}}</span>
+        <a href="/logout" class="hover:text-gray-200 transition">Logout</a>
+      {{else}}
+        <a href="/login" class="hover:text-gray-200 transition">Login</a>
+        <a href="/signup" class="hover:text-gray-200 transition">Signup</a>
+      {{/if}}
     </div>
 
   </div>
