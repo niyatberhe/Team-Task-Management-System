@@ -29,7 +29,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
 
-// Expose decoded JWT payload (if present) to all templates as `user`
 app.use((req, res, next) => {
   const token = req.cookies && req.cookies.token;
   if (!token) {
@@ -49,7 +48,6 @@ app.use((req, res, next) => {
 app.use(methodOverride('_method'));
 app.use(express.static(__dirname + '/public'));
 
-// Ensure DB is connected before handling any routes (important for serverless/Vercel)
 let cached = global.mongoose;
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
